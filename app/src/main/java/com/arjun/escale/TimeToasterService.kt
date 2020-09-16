@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Handler
 import android.widget.Toast
 import androidx.core.app.JobIntentService
+import java.time.LocalTime
 import java.util.*
 
 class TimeToasterService : JobIntentService() {
@@ -15,7 +16,7 @@ class TimeToasterService : JobIntentService() {
     inner class TimeToaster : TimerTask() {
         override fun run() {
             handler.post {
-                Toast.makeText(this@TimeToasterService, "", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@TimeToasterService, LocalTime.now().toString(), Toast.LENGTH_LONG).show()
             }
         }
     }
