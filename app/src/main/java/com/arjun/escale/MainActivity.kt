@@ -1,6 +1,9 @@
 package com.arjun.escale
 
+import android.content.Context
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.view.Menu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -35,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(
                 DividerItemDecoration(
                     this@MainActivity,
-                    RecyclerView.HORIZONTAL
+                    LinearLayoutManager.HORIZONTAL
                 )
             )
             adapter = hitListAdapter
@@ -47,5 +51,33 @@ class MainActivity : AppCompatActivity() {
                 hitListAdapter.submitData(it)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.actionbar_menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        setCount(this, menu, "9")
+        return true
+    }
+
+    private fun setCount(context: Context, menu: Menu?, count: String) {
+        val menuItem = menu?.findItem(R.id.ic_group)
+        val icon = menuItem?.icon as LayerDrawable
+        val badge: CountDrawable
+
+        // Reuse drawable if possible
+        val reuse = icon.findDrawableByLayerId(R.id.ic_group_count)
+        badge = if (reuse != null && reuse is CountDrawable) {
+            reuse
+        } else {
+            CountDrawable(context)
+        }
+        badge.setCount(count)
+        icon.mutate()
+        icon.setDrawableByLayerId(R.id.ic_group_count, badge)
     }
 }
