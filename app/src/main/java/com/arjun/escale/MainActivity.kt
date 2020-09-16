@@ -15,17 +15,24 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: HitViewModel by viewModels()
+    private val list: ArrayList<Hit> by lazy { ArrayList() }
     private val hitListAdapter: HitListAdapter by lazy {
         HitListAdapter(object : HitListAdapter.Interaction {
             override fun onItemSelected(position: Int, item: Hit) {
-                Timber.d(item.title)
+                if (!list.contains(item) && item.isSelected)
+                    list.add(item)
+                else {
+                    if (!item.isSelected)
+                        list.remove(item)
+                }
+
+                invalidateOptionsMenu()
             }
         })
     }
@@ -60,11 +67,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        setCount(this, menu, "9")
+        setCount(this, menu)
         return true
     }
 
-    private fun setCount(context: Context, menu: Menu?, count: String) {
+    private fun setCount(context: Context, menu: Menu?) {
         val menuItem = menu?.findItem(R.id.ic_group)
         val icon = menuItem?.icon as LayerDrawable
         val badge: CountDrawable
@@ -76,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             CountDrawable(context)
         }
-        badge.setCount(count)
+        badge.setCount(list.size.toString())
         icon.mutate()
         icon.setDrawableByLayerId(R.id.ic_group_count, badge)
     }

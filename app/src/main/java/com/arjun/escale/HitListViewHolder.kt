@@ -18,13 +18,18 @@ class HitListViewHolder(
 
     fun bind(item: Hit?) {
         item?.let { hit ->
-            itemView.setOnClickListener {
-                interaction?.onItemSelected(absoluteAdapterPosition, hit)
-            }
 
             title.text = hit.title
             checkBox.isUseMaterialThemeColors = true
-            checkBox.isChecked = true
+
+            // nullify the listener since viewholders get recycled it can cause problems like unwanted selection/deselection etc
+            checkBox.setOnCheckedChangeListener(null)
+            checkBox.isChecked = hit.isSelected
+
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                hit.isSelected = isChecked
+                interaction?.onItemSelected(absoluteAdapterPosition, hit)
+            }
         }
     }
 
