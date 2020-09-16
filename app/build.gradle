@@ -23,6 +23,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            buildConfigField 'String', 'BASE_URL', '"https://hn.algolia.com/api/v1/"'
+        }
     }
 
     buildFeatures {
