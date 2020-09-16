@@ -1,6 +1,7 @@
 package com.arjun.escale
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.Menu
@@ -40,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        TimeToasterService.enqueue(this, Intent(this, TimeToasterService::class.java))
 
         hit_list.apply {
             layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
