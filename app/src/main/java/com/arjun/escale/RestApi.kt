@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface RestApi {
 
     @GET("search_by_date")
-    suspend fun searchRecipe(
+    suspend fun getHits(
         @Query("tags") tags: String,
         @Query("page") page: Int
     ): Response
